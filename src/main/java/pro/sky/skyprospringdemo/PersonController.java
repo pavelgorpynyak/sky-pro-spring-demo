@@ -16,20 +16,35 @@ public class PersonController {
 
     @GetMapping(path = "/person")
     public String getPersonInfo( @RequestParam("number") Integer number ) {
-        try {
-            final String person = personServise.getPerson(number);
-            return person;
-            //           if (person == null) {
-            //             return "Попробуйте другой номер";
+        //  try {
+        final String person = personServise.getPerson(number);
+        return person;
+        //           if (person == null) {
+        //             return "Попробуйте другой номер";
 
-        } catch (BadPersonNumberExeption e) {
-            return "Please try other number";
-        } catch (
-                Exception e) {
-            e.printStackTrace();
-            return "Попробуйте в другой раз";
-        }finally {
-            System.out.println("Работа метода getPersonInfo закончена");
-        }
+        //      } catch (BadPersonNumberExeption e) {
+        //          return "Please try other number";
+        //      } catch (
+        //            Exception e) {
+        //      e.printStackTrace();
+        //    return "Попробуйте в другой раз";
+        //     }finally {
+        //       System.out.println("Работа метода getPersonInfo закончена");
+        // }
+
+        // }
+    }
+
+    @GetMapping(path = "/person/add")
+    public String addPerson( @RequestParam("name") String name,
+                             @RequestParam("surname") String surname,
+                             @RequestParam("profession") Integer profession ) {
+        Person person = new Person(
+                name,
+                surname,
+                profession
+        );
+        personServise.addPerson(person);
+        return "Person added";
     }
 }
