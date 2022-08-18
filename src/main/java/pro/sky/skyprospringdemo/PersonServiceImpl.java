@@ -1,28 +1,33 @@
 package pro.sky.skyprospringdemo;
 
 import org.springframework.stereotype.Service;
-import pro.sky.skyprospringdemo.exeptions.BadPersonNumberExeption;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PersonServiceImpl implements PersonServise {
 
-    List<Person> persons = new ArrayList<>(List.of(
+    Map<String, Person> persons = new HashMap<>(Map.of(
+            "22222",
             new Person("Ivan",
-                    "Ivanov", 2),
-
+                    "Ivanov",
+                    "22222",
+                    2),
+            "625424",
             new Person("Petr",
-                    "Petrov", 1),
-
+                    "Petrov", "625424", 1),
+            "1234",
             new Driver("Vasiliy",
                     "Vasiliev",
-                    "1234", 0),
-
+                    "1234",
+                    "112",
+                    1),
+            "2233",
             new TruckDriver("Ignat",
                     "Ignatovich",
-                    "2233", 4)
+                    "2233", "1233", 0)
     ));
 
     String[] professions = {
@@ -30,27 +35,45 @@ public class PersonServiceImpl implements PersonServise {
             "водитель",
             "столяр",
             "плотник",
+            "актер"
     };
 
 
     @Override
-    public String getPerson( Integer number ) {
-        final Person person;
-        if (number >= persons.size()) {
-            //           return null;
-            throw new BadPersonNumberExeption("ошибка в том, что номер человека, заведомо больше размера массива");
-        }
-        person = persons.get(number);
+    public void addPerson( Person person ) {
+        persons.put(person.getPassport(), person);
+    }
 
+    @Override
+    public void addProfession( String passport, Integer profession ) {
+        final Person person = persons.get(passport);
+        if (person == null) {
+            throw new RuntimeException("Человек с таким номером паспорта не найден");
+        }
+        person.getProfessionNumbers().add(profession);
+
+    }
+
+    @Override
+    public String getPersonByPassport( String passport ) {
+        Person person = persons.get(passport);
+        if (person == null) {
+            throw new RuntimeException("Человек с таким номером паспорта не найден");
+        }
         final String persoDiscription = ""
                 + person.getName() + " "
                 + person.getSurname() + " "
-                + professions[person.getProfessionNumber()];
+                + person.getPassport() + " "
+                + getProfessionNames((List<Integer>) person.getProfessionNumbers());
         return persoDiscription;
     }
 
     @Override
-    public void addPerson( Person person ) {
-        persons.add(person);
+    public String getProfessionNames( List<Integer> professionNumbers ) {
+        String result = "";
+        for (Integer professionNumber : professionNumbers) {
+            result = result + " " + professions[professionNumber];
+        }
+        return result;
     }
 }

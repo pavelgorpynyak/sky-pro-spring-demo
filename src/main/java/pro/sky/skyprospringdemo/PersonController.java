@@ -14,34 +14,28 @@ public class PersonController {
         this.personServise = personServise;
     }
 
-    @GetMapping(path = "/person")
-    public String getPersonInfo( @RequestParam("number") Integer number ) {
-        //  try {
-        final String person = personServise.getPerson(number);
-        return person;
-        //           if (person == null) {
-        //             return "Попробуйте другой номер";
 
-        //      } catch (BadPersonNumberExeption e) {
-        //          return "Please try other number";
-        //      } catch (
-        //            Exception e) {
-        //      e.printStackTrace();
-        //    return "Попробуйте в другой раз";
-        //     }finally {
-        //       System.out.println("Работа метода getPersonInfo закончена");
-        // }
+    @GetMapping(path = "/person/by-passport")
+    public String getPersonInfo( @RequestParam("passport") String passport ) {
 
-        // }
+        return personServise.getPersonByPassport(passport);
+    }
+    @GetMapping(path = "/person/profession /add")
+    public String addProfession( @RequestParam("passport") String passport,
+                               @RequestParam("profession") Integer profession ) {
+        personServise.addProfession(passport, profession );
+        return "Профессия успешно добавлена";
     }
 
     @GetMapping(path = "/person/add")
     public String addPerson( @RequestParam("name") String name,
                              @RequestParam("surname") String surname,
+                             @RequestParam("pasport") String pasport,
                              @RequestParam("profession") Integer profession ) {
         Person person = new Person(
                 name,
                 surname,
+                pasport,
                 profession
         );
         personServise.addPerson(person);
